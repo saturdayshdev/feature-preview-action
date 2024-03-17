@@ -16,6 +16,7 @@
   "devDependencies": {
     "@actions/core": "^1.10.1",
     "@vercel/ncc": "^0.38.1",
+    "cloudflare": "^3.0.0-beta.3",
     "typescript": "^5.4.2"
   }
 }
