@@ -29,7 +29,7 @@ inputs:
     description: 'The IP address of the server.'
     required: true
 
-    portainer-url:
+  portainer-url:
     description: 'Portainer URL.'
     required: true
 
