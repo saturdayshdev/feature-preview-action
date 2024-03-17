@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "🏗️ GitHub Action for deploying feature previews.",
   "main": "dist/main.js",
+  "scripts": {
+    "build": "ncc build src/action.ts --source-map --out dist"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/saturdayshdev/feature-preview-action.git"
