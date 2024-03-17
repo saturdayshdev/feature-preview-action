@@ -25,8 +25,8 @@ const getEnv = () => {
 }
 
 const getStackConfig = () => {
-  const feature = input('feature', true)
-  const path = input('stack-path', true)
+  const feature = input('feature-name', true)
+  const path = input('stack-compose-path', true)
   const file = fs.readFileSync(path, 'utf-8')
   const parsed = mustache.render(file, { feature })
 
@@ -53,7 +53,7 @@ const getType = () => {
 
 const config = {
   type: getType(),
-  feature: input('feature', true),
+  feature: input('feature-name', true),
   cloudflare: getCloudflareConfig(),
   portainer: getPortainerConfig(),
   env: getEnv(),
