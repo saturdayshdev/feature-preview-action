@@ -38,7 +38,23 @@ const getStackConfig = () => {
   }
 }
 
+const getCloudflareConfig = () => {
+  return {
+    email: input('cloudflare-email', true),
+    apiKey: input('cloudflare-api-key', true),
+    domain: input('cloudflare-domain', true),
+    target: input('cloudflare-target', true),
+  }
+}
+
+const getType = () => {
+  return input('pr-status', true) === 'closed' ? 'remove' : 'deploy'
+}
+
 const config = {
+  type: getType(),
+  feature: input('feature', true),
+  cloudflare: getCloudflareConfig(),
   portainer: getPortainerConfig(),
   env: getEnv(),
   stack: getStackConfig(),
