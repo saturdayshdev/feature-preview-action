@@ -84,7 +84,7 @@ export class Portainer {
     return stacks.find((stack) => stack.Name === name)
   }
 
-  public async deleteStack(stackId: string, endpointId: string) {
+  public async deleteStack(stackId: string, endpointId: number) {
     await this.authenticate()
 
     const { data } = await this.axios.delete(`/stacks/${stackId}`, {
