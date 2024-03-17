@@ -19,10 +19,10 @@ export class Portainer {
   private readonly axios: Axios
   private token: string
 
-  constructor(baseUrl: string, username: string, password: string) {
-    this.baseUrl = `${baseUrl}/api`
-    this.username = username
-    this.password = password
+  constructor(params: { baseUrl: string; username: string; password: string }) {
+    this.baseUrl = `${params.baseUrl}/api`
+    this.username = params.username
+    this.password = params.password
     this.axios = axios.create({
       baseURL: this.baseUrl,
       headers: {
