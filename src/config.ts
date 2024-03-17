@@ -24,7 +24,8 @@ const getEnv = () => {
   })
 }
 
-const getStackConfig = (feature: string) => {
+const getStackConfig = () => {
+  const feature = input('feature', true)
   const path = input('stack-path', true)
   const file = fs.readFileSync(path, 'utf-8')
   const parsed = mustache.render(file, { feature })
@@ -40,7 +41,7 @@ const getStackConfig = (feature: string) => {
 const config = {
   portainer: getPortainerConfig(),
   env: getEnv(),
-  stack: getStackConfig(input('feature', true)),
+  stack: getStackConfig(),
 }
 
 export default config
