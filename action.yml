@@ -2,57 +2,116 @@ name: Feature Preview
 description: 🏗️ GitHub Action for deploying feature previews.
 
 inputs:
+  github-token:
+    description: "The GitHub token."
+    required: true
+
+  pr-head-ref:
+    description: "The head ref of the pull request."
+    required: true
+
   pr-status:
-    description: 'The status of the pull request.'
+    description: "The status of the pull request."
     required: true
     options:
       - opened
       - closed
 
+  image-path:
+    description: "The path of the image."
+    required: true
+
+  image-base:
+    description: "The base of the image."
+    required: true
+
   feature-name:
-    description: 'The name of the feature to deploy.'
+    description: "The name of the feature to deploy."
     required: true
 
   cloudflare-email:
-    description: 'The email address for Cloudflare.'
+    description: "The email address for Cloudflare."
     required: true
 
   cloudflare-api-key:
-    description: 'The API key for Cloudflare.'
+    description: "The API key for Cloudflare."
     required: true
 
   cloudflare-domain:
-    description: 'The domain to deploy the feature preview to.'
+    description: "The domain to deploy the feature preview to."
     required: true
 
   cloudflare-target:
-    description: 'The IP address of the server.'
+    description: "The IP address of the server."
     required: true
 
   portainer-url:
-    description: 'Portainer URL.'
+    description: "Portainer URL."
     required: true
 
   portainer-username:
-    description: 'Portainer Username.'
+    description: "Portainer Username."
     required: true
 
   portainer-password:
-    description: 'Portainer Password.'
+    description: "Portainer Password."
     required: true
 
   portainer-endpoint-id:
-    description: 'Portainer Endpoint ID.'
+    description: "Portainer Endpoint ID."
     required: true
 
   env-file:
-    description: 'Env file.'
+    description: "Env file."
     required: true
 
   stack-compose-path:
-    description: 'Path of docker-compose file.'
+    description: "Path of docker-compose file."
     required: true
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: composite
+  steps:
+    - uses: action/checkout@v4
+    - name: Get Feature Name
+      id: get-feature-name
+      run: echo "name=$(echo ${{ github.event.pull_request.head.ref }} | cut -d '/' -f 2)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Build
+      uses: saturdayshdev/build-action@v1.0.1
+      if: ${{ inputs.pr-status == 'opened' }}
+      with:
+        github-token: ${{ inputs.github-token }}
+        dockerfile: ${{ inputs.image-path }}/Dockerfile
+        image: ${{ inputs.image-base }}
+        tag: feature-${{ steps.get-feature-name.outputs.name }}
+
+    - name: Deploy
+      uses: ./action
+      with:
+        pr-status: ${{ inputs.pr-status }}
+        feature-name: ${{ steps.get-feature-name.outputs.name }}
+        cloudflare-email: ${{ inputs.cloudflare-email }}
+        cloudflare-api-key: ${{ inputs.cloudflare-api-key }}
+        cloudflare-domain: ${{ inputs.cloudflare-domain }}
+        cloudflare-target: ${{ inputs.cloudflare-target }}
+        portainer-url: ${{ inputs.portainer-url }}
+        portainer-username: ${{ inputs.portainer-username }}
+        portainer-password: ${{ inputs.portainer-password }}
+        portainer-endpoint-id: ${{ inputs.portainer-endpoint-id }}
+        env-file: ${{ inputs.env-file }}
+        stack-compose-path: ${{ inputs.stack-compose-path }}
+
+    - name: Comment
+      if: ${{ inputs.pr-status == 'opened' }}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `Feature preview deployed at https://${{ inputs.feature-name }}.${{ inputs.cloudflare-domain }}`
+          })
