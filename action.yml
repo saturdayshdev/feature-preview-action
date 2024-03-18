@@ -76,7 +76,8 @@ runs:
 
     - name: Build
       uses: saturdayshdev/build-action@v1.0.1
-      if: ${{ inputs.pr-status == 'opened' }}
+      id: build
+      if: always() && ${{ inputs.pr-status == 'opened' }}
       with:
         github-token: ${{ inputs.github-token }}
         dockerfile: ${{ inputs.image-path }}/Dockerfile
@@ -85,6 +86,8 @@ runs:
 
     - name: Deploy
       uses: ./action
+      id: deploy
+      needs: build
       with:
         pr-status: ${{ inputs.pr-status }}
         feature-name: ${{ steps.get-feature-name.outputs.name }}
@@ -100,8 +103,9 @@ runs:
         stack-compose-path: ${{ inputs.stack-compose-path }}
 
     - name: Comment
-      if: ${{ inputs.pr-status == 'opened' }}
       uses: actions/github-script@v6
+      needs: deploy
+      if: always() && ${{ inputs.pr-status == 'opened' }}
       with:
         github-token: ${{ inputs.github-token }}
         script: |
