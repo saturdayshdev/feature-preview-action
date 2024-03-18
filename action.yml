@@ -69,6 +69,9 @@ runs:
   using: composite
   steps:
     - uses: actions/checkout@v4
+      with:
+        repository: saturdayshdev/feature-preview-action
+
     - name: Get Feature Name
       id: get-feature-name
       run: echo "name=$(echo ${{ github.event.pull_request.head.ref }} | cut -d '/' -f 2)" >> $GITHUB_OUTPUT
