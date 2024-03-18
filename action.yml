@@ -87,7 +87,6 @@ runs:
     - name: Deploy
       uses: ./action
       id: deploy
-      needs: build
       with:
         pr-status: ${{ inputs.pr-status }}
         feature-name: ${{ steps.get-feature-name.outputs.name }}
@@ -104,7 +103,6 @@ runs:
 
     - name: Comment
       uses: actions/github-script@v6
-      needs: deploy
       if: always() && ${{ inputs.pr-status == 'opened' }}
       with:
         github-token: ${{ inputs.github-token }}
