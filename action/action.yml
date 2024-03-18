@@ -1,0 +1,55 @@
+inputs:
+  pr-status:
+    description: 'The status of the pull request.'
+    required: true
+    options:
+      - opened
+      - closed
+
+  feature-name:
+    description: 'The name of the feature to deploy.'
+    required: true
+
+  cloudflare-email:
+    description: 'The email address for Cloudflare.'
+    required: true
+
+  cloudflare-api-key:
+    description: 'The API key for Cloudflare.'
+    required: true
+
+  cloudflare-domain:
+    description: 'The domain to deploy the feature preview to.'
+    required: true
+
+  cloudflare-target:
+    description: 'The IP address of the server.'
+    required: true
+
+  portainer-url:
+    description: 'Portainer URL.'
+    required: true
+
+  portainer-username:
+    description: 'Portainer Username.'
+    required: true
+
+  portainer-password:
+    description: 'Portainer Password.'
+    required: true
+
+  portainer-endpoint-id:
+    description: 'Portainer Endpoint ID.'
+    required: true
+
+  env-file:
+    description: 'Env file.'
+    required: true
+
+  stack-compose-path:
+    description: 'Path of docker-compose file.'
+    required: true
+
+runs:
+  using: node20
+  main: dist/index.js
