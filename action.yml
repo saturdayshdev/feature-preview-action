@@ -85,7 +85,7 @@ runs:
         tag: feature-${{ steps.get-feature-name.outputs.name }}
 
     - name: Deploy
-      uses: ./action
+      uses: saturdayshdev/feature-preview-action/action
       id: deploy
       with:
         pr-status: ${{ inputs.pr-status }}
