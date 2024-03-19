@@ -75,7 +75,7 @@ runs:
       shell: bash
 
     - name: Build
-      uses: saturdayshdev/build-action@v1.1.0-beta
+      uses: saturdayshdev/build-action@v1.0.1
       id: build
       if: always() && ${{ inputs.pr-status == 'opened' }}
       with:
