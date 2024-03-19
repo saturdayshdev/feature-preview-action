@@ -111,5 +111,5 @@ runs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '🚀 Deployed to  https://${{ inputs.feature-name }}.feature.${{ inputs.cloudflare-domain }}'
+            body: '🚀 Deployed to  https://${{ steps.get-feature-name.outputs.name }}.feature.${{ inputs.cloudflare-domain }}'
           })
